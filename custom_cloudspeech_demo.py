@@ -17,6 +17,7 @@
 import argparse
 import locale
 import logging
+import aiy.voice.tts
 
 from aiy.board import Board, Led
 from aiy.cloudspeech import CloudSpeechClient
@@ -64,6 +65,12 @@ def main():
                 board.led.state = Led.OFF
             elif 'blink the light' in text:
                 board.led.state = Led.BLINK
+            #New Command 1
+            if 'repeat after me' in text:
+                aiy.voice.tts.say("Okay. Ready.")
+                # Remove "repeat after me" from the text to be repeated
+                to_repeat = text.replace('repeat after me', '', 1)
+                aiy.voice.tts.say(to_repeat)
             elif 'goodbye' in text:
                 break
 
