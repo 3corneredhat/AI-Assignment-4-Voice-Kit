@@ -65,12 +65,53 @@ def main():
                 board.led.state = Led.OFF
             elif 'blink the light' in text:
                 board.led.state = Led.BLINK
-            #New Command 1
-            if 'repeat after me' in text:
+            #additional 1
+            elif 'repeat after me' in text:
                 aiy.voice.tts.say("Okay. Ready.")
                 # Remove "repeat after me" from the text to be repeated
-                to_repeat = text.replace('repeat after me', '', 1)
-                aiy.voice.tts.say(to_repeat)
+                while True:
+                    if hints:
+                        logging.info('Say something, e.g. %s.' % ', '.join(hints))
+                    else:
+                        logging.info('Say something.')
+                    text = client.recognize(language_code=args.language, hint_phrases=hints)
+                    if text is None:
+                        logging.info('You said nothing.')
+                        continue
+
+                    logging.info('You said: "%s"' % text)
+                    text = text.lower()
+                    to_repeat = text.replace('repeat after me', '', 1)
+                    if 'i\'m done' in text:
+                        aiy.voice.tts.say("Great. I hope that was fun for you.")
+                        break
+                    else:
+                        aiy.voice.tts.say(to_repeat)
+            #additional 2
+            elif 'can you speak other languages' in text or 'can you say things in other languages' in text:
+                aiy.voice.tts.say("Yes. Tell me which language")
+                # Remove "repeat after me" from the text to be repeated
+                while True:
+                    logging.info('Say something.')
+                    text = client.recognize(language_code=args.language, hint_phrases=hints)
+                    if text is None:
+                        logging.info('You said nothing.')
+                        continue
+                    logging.info('You said: "%s"' % text)
+                    text = text.lower()
+                    
+                    if 'german' in text: 
+                        aiy.voice.tts.say("ich liebe dich", lang='de-DE')
+                        break
+                    elif 'spanish' in text:
+                        aiy.voice.tts.say("te amo", lang='es-ES')
+                        break
+                    elif 'french' in text:
+                        aiy.voice.tts.say("je t'aime", lang='fr-FR')
+                        break
+                    elif 'italian' in text:
+                        aiy.voice.tts.say("ti amo", lang='it-IT')
+                        break
             elif 'goodbye' in text:
                 break
 
