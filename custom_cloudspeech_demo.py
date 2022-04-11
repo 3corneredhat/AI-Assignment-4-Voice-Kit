@@ -79,18 +79,17 @@ def main():
                         logging.info('You said nothing.')
                         continue
 
-                    logging.info('You said: "%s"' % text)
+                    logging.info('You said: \'%s' % text)
                     text = text.lower()
                     to_repeat = text.replace('repeat after me', '', 1)
                     if 'i\'m done' in text:
-                        aiy.voice.tts.say("Great. I hope that was fun for you.")
+                        aiy.voice.tts.say('Great. I hope that was fun for you.')
                         break
                     else:
                         aiy.voice.tts.say(to_repeat)
             #additional 2
             elif 'can you speak other languages' in text or 'can you say things in other languages' in text:
-                aiy.voice.tts.say("Yes. Tell me which language")
-                # Remove "repeat after me" from the text to be repeated
+                aiy.voice.tts.say('Yes. What language do you want to hear?')
                 while True:
                     logging.info('Say something.')
                     text = client.recognize(language_code=args.language, hint_phrases=hints)
@@ -99,18 +98,69 @@ def main():
                         continue
                     logging.info('You said: "%s"' % text)
                     text = text.lower()
-                    
-                    if 'german' in text: 
-                        aiy.voice.tts.say("ich liebe dich", lang='de-DE')
+                    if 'german' in text:
+                        aiy.voice.tts.say('ich liebe dich', lang='de-DE')
                         break
                     elif 'spanish' in text:
-                        aiy.voice.tts.say("te amo", lang='es-ES')
+                        aiy.voice.tts.say('te amo', lang='es-ES')
                         break
                     elif 'french' in text:
-                        aiy.voice.tts.say("je t'aime", lang='fr-FR')
+                        aiy.voice.tts.say('je t\'aime', lang='fr-FR')
                         break
                     elif 'italian' in text:
-                        aiy.voice.tts.say("ti amo", lang='it-IT')
+                        aiy.voice.tts.say('ti amo', lang='it-IT')
+                        break
+                    else:
+                        aiy.voice.tts.say('I can only say things in german, spanish, french, and italian')
+            #additional 3
+            elif 'do you like star wars' in text:
+                aiy.voice.tts.say('Yes. Can you guess my favorite character?')
+                count = 0
+                while True:
+                    logging.info('Say something.')
+                    text = client.recognize(language_code=args.language, hint_phrases=hints)
+                    if text is None:
+                        logging.info('You said nothing.')
+                        continue
+                    logging.info('You said: "%s"' % text)
+                    text = text.lower()
+
+                    if 'i g eleven' in text:
+                        aiy.voice.tts.say('That\'s right!')
+                        break
+                    elif 'give up' in text:
+                        aiy.voice.tts.say('It was i g eleven from the Mandolorian.')
+                        break
+                    elif count == 3:
+                        aiy.voice.tts.say('I\'ll give you a hint. They are from the star wars extended universe.')
+                    else:
+                        aiy.voice.tts.say('Try again.')
+                        count+=1
+            #additional 4
+            elif 'listen to music' in text:
+                aiy.voice.tts.say('yes. I enjoy listening to classical music.')
+                count = 0
+                while True:
+                    logging.info('Say something.')
+                    text = client.recognize(language_code=args.language, hint_phrases=hints)
+                    if text is None:
+                        logging.info('You said nothing.')
+                        continue
+                    logging.info('You said: "%s"' % text)
+                    text = text.lower()
+
+                    if 'what other kind of music do you like' in text:
+                        genre = ['rock', 'rap', 'classical', 'country']
+                        random = random.randint(0,len(genre)-1)
+                        aiy.voice.tts.say('I also enjoy listening to ' + random)
+                        break
+                    elif 'favorite composer' in text:
+                        aiy.voice.tts.say('if i had to choose it would be')
+                        composers = [('johannes brahms','de-DE'), ('antonio vivaldi','it-IT'),
+                                    ('manuel de falla','es-ES'), ('jean baptiste lully', 'fr-FR'),
+                                    ('sir edward elgar','en-US')]
+                        rand_composer = random.randint(0,len(composers)-1)
+                        aiy.voice.tts.say(rand_composer[0],rand_composer[1])
                         break
             elif 'goodbye' in text:
                 break
